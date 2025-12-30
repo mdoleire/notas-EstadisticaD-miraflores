@@ -68,9 +68,7 @@ if st.button("Ver Resultados"):
                 # --- FEEDBACK IA ---
                 mensaje = ""
                 try:
-                    prompt = f"Actúa como un profesor amable, no des muchos rodeos. Alumno: {nombre_real}. Nota: {row['promedio_final']} Resalta la calificación obtenida en el periodo. 
-                    Motívalo brevemente, una buena calificación va de 85 para arriba, una calificación media de 70 a 85 y una calificación mala de 70 69 para abajo, aunque la aprobatoria 
-                    es 60 hay que motivarlos. Firma como 'Atentamente: Marco'."
+                    prompt = f"Actúa como un profesor amable, no des muchos rodeos. Alumno: {nombre_real}. Nota: {row['promedio_final']} Resalta la calificación obtenida en el periodo. Motívalo brevemente, una buena calificación va de 85 para arriba, una calificación media de 70 a 85 y una calificación mala de 70 69 para abajo, aunque la aprobatoria es 60 hay que motivarlos. Firma como 'Atentamente: Marco'."
                     with st.spinner('Analizando desempeño...'):
                         response = model.generate_content(prompt)
                         mensaje = response.text
@@ -90,6 +88,7 @@ if st.button("Ver Resultados"):
                 st.error("Nombre incorrecto.")
         else:
             st.error("Lista no encontrada.")
+
 
 
 
