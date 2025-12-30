@@ -2,20 +2,17 @@ import streamlit as st
 import pandas as pd
 import google.generativeai as genai
 
-# --- CONFIGURACIÓN DIRECTA ---
-# Pega tu clave real aquí abajo (la que empieza con AIza...)
-API_KEY = "AIzaSyAn230zYeBakpJ_EsGN4PuuXOhcRrBE5uw" 
+# --- CONFIGURACIÓN SEGURA ---
+# El código buscará la llave en la caja fuerte de Streamlit
+try:
+    API_KEY = st.secrets["GOOGLE_API_KEY"]
+except:
+    st.error("⚠️ No se detectó la API Key en los Secrets de Streamlit.")
+    st.stop()
 
-# Configurar Gemini
-if API_KEY and API_KEY.startswith("AIza"):
-    genai.configure(api_key=API_KEY)
-    
-    # CORRECCIÓN: Usamos el modelo vigente en Diciembre 2025
-    NOMBRE_DEL_MODELO = 'gemini-2.5-flash' 
-    
-    model = genai.GenerativeModel(NOMBRE_DEL_MODELO)
-else:
-    model = None
+# Configurar Gemini (Usamos el modelo estándar actual)
+genai.configure(api_key=API_KEY)
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # --- FUNCIÓN PARA CARGAR DATOS ---
 def cargar_datos():
@@ -31,26 +28,28 @@ def cargar_datos():
         df = df[pd.to_numeric(df['numero_lista'], errors='coerce').notna()]
         df['numero_lista'] = df['numero_lista'].astype(float).astype(int).astype(str)
         
-        # Mapeo de columnas de calificaciones
+        # Mapeo de columnas (Ajustado a tu duda anterior: Indice = Excel - 1)
         def limpiar_nota(col_idx):
             if col_idx < len(df.columns):
                 return pd.to_numeric(df[df.columns[col_idx]], errors='coerce').fillna(0)
             return 0.0
 
-        df['promedio_final'] = limpiar_nota(11)
-        df['participacion'] = limpiar_nota(12)
-        df['tareas'] = limpiar_nota(13)
-        df['proyecto'] = limpiar_nota(14)
-        df['examen'] = limpiar_nota(15)
+        # Ajusta estos índices si cambiaste columnas en el Excel
+        # Recuerda: Columna 17 en Excel es índice 16 en Python
+        df['promedio_final'] = limpiar_nota(16) 
+        df['participacion'] = limpiar_nota(17)
+        df['tareas'] = limpiar_nota(18)
+        df['proyecto'] = limpiar_nota(19)
+        df['examen'] = limpiar_nota(20)
         return df
     except Exception as e:
-        st.error(f"⚠️ Error CSV: {e}")
+        st.error(f"⚠️ Error al leer CSV: {e}")
         return None
 
 # --- INTERFAZ ---
-st.set_page_config(page_title="Calificaciones Estadística", page_icon="🦁")
-st.title("🦁 Consulta de Calificaciones 6° D")
-st.subheader("Periodo 2: Estadística y Probabilidad")
+st.set_page_config(page_title="Calificaciones Estadística - Miraflores", page_icon="🦁")
+st.title("🦁 Consulta de Calificaciones")
+st.subheader("Periodo 2: Estadística y Probabilidad 6° D")
 
 col1, col2 = st.columns(2)
 num = col1.text_input("Número de Lista:")
@@ -63,22 +62,18 @@ if st.button("Ver Resultados"):
         if not alumno.empty:
             nombre_real = alumno.iloc[0]['nombre']
             if isinstance(nombre_real, str) and nom.lower().strip() in nombre_real.lower():
-                # Datos
                 row = alumno.iloc[0]
                 
                 # --- FEEDBACK IA ---
                 mensaje = ""
                 try:
-                    if model is None:
-                         mensaje = "⚠️ Error: Falta pegar la API KEY en la línea 6."
-                    else:
-                        prompt = f"Actúa como un profesor amable, no des muchos rodeos. Alumno: {nombre_real}. Nota: {row['promedio_final']} Resalta la calificación obtenida en el periodo. Motívalo brevemente. Firma como 'Atentamente: Marco'."
+                    prompt = f"Actúa como un profesor amable, no des muchos rodeos. Alumno: {nombre_real}. Nota: {row['promedio_final']} Resalta la calificación obtenida en el periodo. Motívalo brevemente. Firma como 'Atentamente: Marco'."
+                    with st.spinner('Analizando desempeño...'):
                         response = model.generate_content(prompt)
                         mensaje = response.text
                 except Exception as e:
-                    mensaje = f"⚠️ Error Técnico: {str(e)}"
+                    mensaje = f"Buen esfuerzo. (El sistema de IA está descansando: {str(e)})"
 
-                # Mostrar
                 st.success(f"Alumno: {nombre_real}")
                 c1, c2, c3, c4 = st.columns(4)
                 c1.metric("Part (20%)", row['participacion'])
@@ -92,8 +87,3 @@ if st.button("Ver Resultados"):
                 st.error("Nombre incorrecto.")
         else:
             st.error("Lista no encontrada.")
-
-
-
-
-
