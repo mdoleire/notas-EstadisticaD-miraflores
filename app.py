@@ -49,7 +49,7 @@ def cargar_datos():
 
 # --- INTERFAZ ---
 st.set_page_config(page_title="Calificaciones Estadística", page_icon="🦁")
-st.title("🦁 Consulta de Calificaciones")
+st.title("🦁 Consulta de Calificaciones 6° D")
 st.subheader("Periodo 2: Estadística y Probabilidad")
 
 col1, col2 = st.columns(2)
@@ -92,6 +92,7 @@ if st.button("Ver Resultados"):
                 st.error("Nombre incorrecto.")
         else:
             st.error("Lista no encontrada.")
+
 
 
 
