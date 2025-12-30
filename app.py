@@ -37,11 +37,11 @@ def cargar_datos():
 
         # Ajusta estos índices si cambiaste columnas en el Excel
         # Recuerda: Columna 17 en Excel es índice 16 en Python
-        df['promedio_final'] = limpiar_nota(16) 
-        df['participacion'] = limpiar_nota(17)
-        df['tareas'] = limpiar_nota(18)
-        df['proyecto'] = limpiar_nota(19)
-        df['examen'] = limpiar_nota(20)
+        df['promedio_final'] = limpiar_nota(11) 
+        df['participacion'] = limpiar_nota(12)
+        df['tareas'] = limpiar_nota(13)
+        df['proyecto'] = limpiar_nota(14)
+        df['examen'] = limpiar_nota(15)
         return df
     except Exception as e:
         st.error(f"⚠️ Error al leer CSV: {e}")
@@ -88,4 +88,5 @@ if st.button("Ver Resultados"):
                 st.error("Nombre incorrecto.")
         else:
             st.error("Lista no encontrada.")
+
 
