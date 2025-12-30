@@ -37,11 +37,11 @@ def cargar_datos():
                 return pd.to_numeric(df[df.columns[col_idx]], errors='coerce').fillna(0)
             return 0.0
 
-        df['promedio_final'] = limpiar_nota(12)
-        df['participacion'] = limpiar_nota(13)
-        df['tareas'] = limpiar_nota(14)
-        df['proyecto'] = limpiar_nota(15)
-        df['examen'] = limpiar_nota(16)
+        df['promedio_final'] = limpiar_nota(11)
+        df['participacion'] = limpiar_nota(12)
+        df['tareas'] = limpiar_nota(13)
+        df['proyecto'] = limpiar_nota(14)
+        df['examen'] = limpiar_nota(15)
         return df
     except Exception as e:
         st.error(f"⚠️ Error CSV: {e}")
@@ -92,6 +92,7 @@ if st.button("Ver Resultados"):
                 st.error("Nombre incorrecto.")
         else:
             st.error("Lista no encontrada.")
+
 
 
 
