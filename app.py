@@ -11,8 +11,9 @@ except:
     st.stop()
 
 # Configurar Gemini (Usamos el modelo estándar actual)
-genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+if API_KEY:
+    genai.configure(api_key=API_KEY)
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
 # --- FUNCIÓN PARA CARGAR DATOS ---
 def cargar_datos():
@@ -87,3 +88,4 @@ if st.button("Ver Resultados"):
                 st.error("Nombre incorrecto.")
         else:
             st.error("Lista no encontrada.")
+
